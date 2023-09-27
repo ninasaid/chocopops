@@ -19,6 +19,7 @@ function shoot()
         bullet.angle = player1.direction;
         player1.bullets.push(bullet);
         bulletTime1 = clock.getElapsedTime();
+
     } 
 
     // move bullets
@@ -51,6 +52,18 @@ function bullet_collision()
             player1.bullets.splice(i, 1);
             i--;
         }
+
+        else 
+        {
+            
+            if (Math.abs(player2.position.x - player1.bullets[i].position.x) < 10 && Math.abs(player2.position.y - player1.bullets[i].position.y) < 10)
+            {
+                scene.remove(player2.graphic)
+            }
+        }
+
+                
+       
     }
 
 }
@@ -61,12 +74,21 @@ function player_collision()
     var x = player1.graphic.position.x + WIDTH / 2;
     var y = player1.graphic.position.y + HEIGHT / 2;
 
+    if ( x < 0)
+        player1.graphic.position.x -= x;
     if ( x > WIDTH )
         player1.graphic.position.x -= x - WIDTH;
     if ( y < 0 )
         player1.graphic.position.y -= y;
     if ( y > HEIGHT )
         player1.graphic.position.y -= y - HEIGHT;
+
+
+    if (Math.abs(player2.position.x - player1.position.x) < 10 && Math.abs(player2.position.y - player1.position.y) < 10)
+    {
+        player1.life -= 1;
+    }
+
 
 }
 
@@ -82,18 +104,21 @@ function player_falling()
 
     for (var i = 0; i < length; i++) {
         element = noGround[i];
-
-        var tileX = (element[0]) | 0;
-        var tileY = (element[1]) | 0;
-        var mtileX = (element[0] + sizeOfTileX) | 0;
-        var mtileY = (element[1] + sizeOfTileY) | 0;
+        if(element == undefined)
+            element = 0;
+        var tileX = (element[0] - sizeOfTileX / 2)
+        var tileY = (element[1] - sizeOfTileY / 2)
+        var mtileX = (element[0] + sizeOfTileX /2)
+        var mtileY = (element[1] + sizeOfTileY /2)
 
         if ((x > tileX)
             && (x < mtileX)
             && (y > tileY) 
             && (y < mtileY))
         {
-           player1.dead();
+           player1.life -=1;
+           if(player1.life== 0)
+                player1.dead();
         }
     }
 
